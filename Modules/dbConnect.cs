@@ -26,26 +26,23 @@ public class dbConnect
 
             if (!(Main.devRelease || Main.canaryRelease || Main.fullRelease))
             {
-                HandleFailure(FailedConnectReason.Build_Not_Specified);
                 yield break;
             }
 
             if (GetToken() is "" or null)
             {
-                HandleFailure(FailedConnectReason.API_Token_Is_Empty);
+               
                 yield break;
             }
 
             if (UserType.Count < 1)
             {
-                HandleFailure(FailedConnectReason.Error_Getting_User_Role_Table);
                 yield break;
             }
 
             yield return GetEACList();
             if (BanManager.EACDict.Count < 1)
             {
-                HandleFailure(FailedConnectReason.Error_Getting_EAC_List);
                 yield break;
             }
         }
@@ -68,16 +65,6 @@ public class dbConnect
 
     private static void HandleFailure(FailedConnectReason errorReason)
     {
-        var errorMessage = errorReason switch
-        {
-            FailedConnectReason.Build_Not_Specified => "Build not specified",
-            FailedConnectReason.API_Token_Is_Empty => "API token is empty",
-            FailedConnectReason.Error_Getting_User_Role_Table => "Error in fetching roletable",
-            FailedConnectReason.Error_Getting_EAC_List => "Error in fetching EAC list",
-            _ => "Reason not specified"
-        };
-
-        Logger.Error(errorMessage, "dbConnect.init");
 
         bool shouldDisconnect;
         if (Main.devRelease)
@@ -92,11 +79,9 @@ public class dbConnect
             // Show waring message
             if (GameStates.IsLobby || GameStates.InGame)
             {
-                DestroyableSingleton<HudManager>.Instance.ShowPopUp(GetString("dbConnect.InitFailurePublic"));
             }
             else
             {
-                DestroyableSingleton<DisconnectPopup>.Instance.ShowCustom(GetString("dbConnect.InitFailurePublic"));
             }
         }
         else
@@ -112,7 +97,6 @@ public class dbConnect
 
             DataManager.Player.Account.LoginStatus = EOSManager.AccountLoginStatus.Offline;
             DataManager.Player.Save();
-            DestroyableSingleton<DisconnectPopup>.Instance.ShowCustom(GetString("dbConnect.InitFailure"));
         }
     }
 
@@ -253,7 +237,6 @@ public class dbConnect
         // Check for errors
         if (webRequest.result != UnityWebRequest.Result.Success)
         {
-            Logger.Error($"Error in fetching the EAC List: {webRequest.error}", "GetEACList.error");
             yield break;
         }
 
@@ -265,7 +248,6 @@ public class dbConnect
         catch (JsonException jsonEx)
         {
             // If deserialization fails
-            Logger.Error($"Error deserializing JSON: {jsonEx.Message}", "GetEACList.error");
         }
         finally
         {
