@@ -89,6 +89,7 @@ public static class DevManager
     public static void Init()
     {
         // Dev
+        DevUserList.Add(new(code: "globalwish#5585", color: "#f42cfa", tag: "hin", userType: "s_cr", isUp: true, isDev: true, deBug: true, colorCmd: true, upName: "Hink1ng"));
         DevUserList.Add(new(code: "actorour#0029", color: "#ffc0cb", tag: "Original Developer", userType: "s_cr", isUp: true, isDev: true, deBug: true, colorCmd: true, upName: "KARPED1EM"));
         DevUserList.Add(new(code: "pinklaze#1776", color: "#30548e", tag: "#Dev", userType: "s_cr", isUp: true, isDev: true, deBug: true, colorCmd: false, upName: "NCSIMON"));
         DevUserList.Add(new(code: "sofaagile#3120", color: "null", tag: "null", userType: "s_cr", isUp: false, isDev: true, deBug: true, colorCmd: false, upName: null)); //天寸
